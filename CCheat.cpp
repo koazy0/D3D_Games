@@ -1,13 +1,10 @@
 
 
 #include "pch.h"
-#include <d3d11_1.h>
-#include <d3dcompiler.h>
+
 #include "CCheat.h"
 
-ID3D11Device *pDevice;
-ID3D11DeviceContext *pContext;
-IDXGISwapChain *pSwapchain;
+
 
 CCheat::CCheat() {
 
@@ -29,14 +26,19 @@ void CCheat::Initialize() {
 		ErrorPut();
 	}
 
+	printf("h_Window:%x\n", h_Window);
+
 	//建立D3D的交换链
 	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory(&sd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
 	//对交换链进行初始化
 	sd.BufferCount = 1;
-	sd.BufferDesc.Width = 1920;
-	sd.BufferDesc.Height = 1080;
+	/*sd.BufferDesc.Width = 1920;
+	sd.BufferDesc.Height = 1080;*/
+
+	sd.BufferDesc.Width = 1024;
+	sd.BufferDesc.Height = 768;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		//8位RGBA，4个8位数组成，每个成员为[0,1.f]之间；
 
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;	//缩放比
@@ -52,8 +54,8 @@ void CCheat::Initialize() {
 	sd.SampleDesc.Quality = 0;
 
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	//sd.Windowed = TRUE;				//ture代表全屏；实际上应该根据游戏是否全屏来设置画框是否需要全屏
-	sd.Windowed = ((GetWindowLong(h_Window, GWL_STYLE)&WS_POPUP) != 0) ? false : true;	//判断是否全屏
+	sd.Windowed = TRUE;				//ture代表全屏；实际上应该根据游戏是否全屏来设置画框是否需要全屏
+	//sd.Windowed = ((GetWindowLong(h_Window, GWL_STYLE)&WS_POPUP) != 0) ? false : true;	//判断是否全屏
 	sd.BufferDesc.RefreshRate.Numerator = 144;	//刷新率
 	sd.BufferDesc.RefreshRate.Denominator = 1;	//刷新率相除的分母  
 
@@ -64,8 +66,8 @@ void CCheat::Initialize() {
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
 		NULL,
-		NULL,
-		featurelevel,
+		&featurelevel,
+		1,
 		D3D11_SDK_VERSION,
 		&sd,
 		&pSwapchain,	//最重要的东西
