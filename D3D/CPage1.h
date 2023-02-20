@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#pragma comment(lib, "detours.lib")
 
 // CPage1 对话框
 
@@ -22,4 +22,11 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedCheck1();
 };
+
+int  WINAPI My_Messagebox(
+	HWND hWnd,
+	LPCSTR lpText,
+	LPCSTR lpCaption,
+	UINT uType);

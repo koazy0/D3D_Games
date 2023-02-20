@@ -1,5 +1,5 @@
 ﻿// MainView.cpp: 实现文件
-//
+// 主要绘制主页面
 
 #include "pch.h"
 #include "MFCDLL.h"

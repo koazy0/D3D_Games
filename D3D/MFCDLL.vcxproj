@@ -76,8 +76,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\Program Files (x86)\vs2017IDE\Detours-master\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\Program Files (x86)\vs2017IDE\Detours-master\lib.X86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -195,6 +195,8 @@
     <ClCompile Include="CCheat.cpp" />
     <ClCompile Include="CPage1.cpp" />
     <ClCompile Include="CPage2.cpp" />
+    <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="MainView.cpp" />
     <ClCompile Include="MFCDLL.cpp" />
     <ClCompile Include="pch.cpp">
@@ -214,6 +216,8 @@
     <ClInclude Include="CPage1.h" />
     <ClInclude Include="CPage2.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Helpers.h" />
+    <ClInclude Include="Hooks.h" />
     <ClInclude Include="MainView.h" />
     <ClInclude Include="MFCDLL.h" />
     <ClInclude Include="pch.h" />

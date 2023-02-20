@@ -36,6 +36,12 @@
     <ClCompile Include="CCheat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Helpers.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MFCDLL.def">
@@ -74,6 +80,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CCheat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

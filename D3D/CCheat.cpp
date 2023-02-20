@@ -1,10 +1,10 @@
-
+// Hook的主要逻辑
+// 在这里进行对交换链的hook
 
 #include "pch.h"
-
 #include "CCheat.h"
-
-
+#include "Helpers.h"
+#include "Hooks.h"
 
 CCheat::CCheat() {
 
@@ -15,13 +15,13 @@ CCheat::~CCheat() {
 }
 
 
-
 void CCheat::Initialize() {
 	AllocConsole();
 	freopen("CON", "w", stdout);	//输入流定向到控制台
 	SetConsoleTitle("CheatDll");
 
 	HWND h_Window = FindWindow(NULL, "Counter-Strike");
+	//HWND h_Window = FindWindow(NULL, "AssaultCube");
 	if (!h_Window) {
 		ErrorPut();
 	}
@@ -76,12 +76,27 @@ void CCheat::Initialize() {
 		&pContext
 	);
 
+	DWORD_PTR * pSwapchainVT = reinterpret_cast<DWORD_PTR * > (pSwapchain);
+	
+	pSwapchainVT = reinterpret_cast<DWORD_PTR *>(pSwapchainVT[0]);
+
+	for (int i = 0; i < 9; i++) {
+		printf("pSwapchainVT[%d]:%X\n",i, pSwapchainVT[i]);
+	}
+	
+	Hooks::oPresent = reinterpret_cast<tD3D11Present>(pSwapchainVT[8]);
+	
+	Helpers::HookFunction(reinterpret_cast<PVOID *>(&Hooks::oPresent), Hooks::hktD3D11Present);
+
 	printf("pSwapChain:%X\n",pSwapchain);
 	printf("pDevice:%X\n", pDevice);
 	printf("pContext:%X\n", pContext);
+	printf("Initialize Finished \n");
+
 }
 
 void CCheat::Release() {
+	Helpers::UnhookFunction(reinterpret_cast<PVOID *>(&Hooks::oPresent), Hooks::hktD3D11Present);
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
 	FreeConsole();
 }
