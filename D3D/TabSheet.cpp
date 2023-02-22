@@ -1,6 +1,6 @@
 // TabSheet.cpp : implementation file  
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "pch.h"
 
 #include "TabSheet.h"  

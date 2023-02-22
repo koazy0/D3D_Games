@@ -16,9 +16,7 @@ public:
 	void Initialize();
 	void Release();
 	
-	ID3D11Device *pDevice;
-	ID3D11DeviceContext *pContext;
-	IDXGISwapChain *pSwapchain;
+	
 };
 
 void ErrorPut();

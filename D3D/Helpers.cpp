@@ -8,13 +8,13 @@
 void Helpers::HookFunction(PVOID *Originfunc, PVOID Myfunc) {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourAttach(&(PVOID&)Originfunc, Myfunc);
+	DetourAttach(Originfunc, Myfunc);
 	DetourTransactionCommit();
 }
 
 void Helpers::UnhookFunction(PVOID *Originfunc, PVOID Myfunc) {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourDetach(&(PVOID&)Originfunc, Myfunc);
+	DetourDetach(Originfunc, Myfunc);
 	DetourTransactionCommit();
 }

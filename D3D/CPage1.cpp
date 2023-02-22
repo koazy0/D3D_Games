@@ -40,15 +40,7 @@ END_MESSAGE_MAP()
 void CPage1::OnBnClickedButton1()
 {
 	//花指令，方便调试的时候定位
-	_asm {
-		mov eax,eax
-		mov eax,eax
-		mov eax,eax
-		mov eax,eax
-		mov eax,eax
-		mov eax,eax
-		mov eax,eax
-	}
+	
 	MessageBox("Unhook", NULL, MB_OK);
 	// TODO: 在此添加控件通知处理程序代码
 }

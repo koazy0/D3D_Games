@@ -5,6 +5,18 @@
 #include "CCheat.h"
 #include "Helpers.h"
 #include "Hooks.h"
+#include "Render.h"
+
+
+
+
+
+
+
+ID3D11Device *pDevice;
+ID3D11DeviceContext *pContext;
+IDXGISwapChain *pSwapchain;
+ID3D11RenderTargetView *pRenderTargetView;
 
 CCheat::CCheat() {
 
@@ -14,14 +26,12 @@ CCheat::~CCheat() {
 
 }
 
-
 void CCheat::Initialize() {
 	AllocConsole();
 	freopen("CON", "w", stdout);	//输入流定向到控制台
 	SetConsoleTitle("CheatDll");
 
-	HWND h_Window = FindWindow(NULL, "Counter-Strike");
-	//HWND h_Window = FindWindow(NULL, "AssaultCube");
+	HWND h_Window = FindWindow(NULL, GAME);
 	if (!h_Window) {
 		ErrorPut();
 	}
@@ -36,7 +46,6 @@ void CCheat::Initialize() {
 	sd.BufferCount = 1;
 	/*sd.BufferDesc.Width = 1920;
 	sd.BufferDesc.Height = 1080;*/
-
 	sd.BufferDesc.Width = 1024;
 	sd.BufferDesc.Height = 768;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		//8位RGBA，4个8位数组成，每个成员为[0,1.f]之间；
@@ -76,27 +85,41 @@ void CCheat::Initialize() {
 		&pContext
 	);
 
+//hook虚函数
+	//获取到IDXGISwapChain::Prensent()的地址
 	DWORD_PTR * pSwapchainVT = reinterpret_cast<DWORD_PTR * > (pSwapchain);
-	
 	pSwapchainVT = reinterpret_cast<DWORD_PTR *>(pSwapchainVT[0]);
-
-	for (int i = 0; i < 9; i++) {
-		printf("pSwapchainVT[%d]:%X\n",i, pSwapchainVT[i]);
-	}
-	
 	Hooks::oPresent = reinterpret_cast<tD3D11Present>(pSwapchainVT[8]);
-	
-	Helpers::HookFunction(reinterpret_cast<PVOID *>(&Hooks::oPresent), Hooks::hktD3D11Present);
 
-	printf("pSwapChain:%X\n",pSwapchain);
+	//获取到ID3D11DeviceContext::DrawIndexed()的地址
+	DWORD_PTR * pContextVT = reinterpret_cast<DWORD_PTR *> (pContext);
+	pSwapchainVT = reinterpret_cast<DWORD_PTR *>(pContextVT[0]);
+	Hooks::oDrawIndexed = reinterpret_cast<tD3D11DrawIndexed>(pContextVT[12]);
+	//验证虚地址表是否打印正确
+	/*for (int i = 0; i < 9; i++) {
+		printf("pSwapchainVT[%d]:%X\n",i, pSwapchainVT[i]);
+	}*/
+	
+	//在此位置进行画框的初始化
+	//初始化过后开始对关键函数进行hook
+	//采用C++单例模式---->饥汉模式(在构造的时候创造实例)
+	printf("pSwapChain:%X\n", pSwapchain);
 	printf("pDevice:%X\n", pDevice);
 	printf("pContext:%X\n", pContext);
+
+	Render::GetInstance()->Initialize();
+
+	Helpers::HookFunction(reinterpret_cast<PVOID *>(&(Hooks::oPresent)), Hooks::hktD3D11Present);
+	Helpers::HookFunction(reinterpret_cast<PVOID *>(&Hooks::oDrawIndexed), Hooks::hktD3D11DrawIndexed);
+	
+	printf("\n\n\n");
 	printf("Initialize Finished \n");
 
 }
 
 void CCheat::Release() {
-	Helpers::UnhookFunction(reinterpret_cast<PVOID *>(&Hooks::oPresent), Hooks::hktD3D11Present);
+	Helpers::UnhookFunction(reinterpret_cast<PVOID *>(&(Hooks::oPresent)), Hooks::hktD3D11Present);
+	Helpers::UnhookFunction(reinterpret_cast<PVOID *>(&(Hooks::oDrawIndexed)), Hooks::hktD3D11DrawIndexed);
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
 	FreeConsole();
 }
